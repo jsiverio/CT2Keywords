@@ -9,8 +9,7 @@ def page_finder(pdfstream, keyword):
     for i in range(2, page_count - 1):
         page = pdfstream.pages[i].extract_text()
         if (keyword in page):
-            hit = i
-    return (hit)
+            return (i)
 
 
 """
@@ -61,6 +60,7 @@ def get_emails(pdfstream, start_page):
         result = re.search(regex, page)
         if result:
             email_list.append(result.group())
+            email_list = list(dict.fromkeys(email_list))
     return email_list
 
 def get_md5(pdfstream,start_page):
@@ -73,27 +73,43 @@ def get_md5(pdfstream,start_page):
         if len(result) > 0:
             md5_list += result
     md5_list = list(dict.fromkeys(md5_list))
+    print(len(md5_list))
     return md5_list
 
 def get_file_names(pdfstream,start_page):
     file_list=[]
-    regex = r'\b[\D\d]+\.[a-zA-Z\d]{3}'
+    regex = re.compile(r"([A-Za-z0-9\-]+\.[mp4|jpg|png|bmp|jpeg|mpeg|heic]{3})", re.IGNORECASE)
     page_count = len(pdfstream.pages)
     for i in range(start_page, page_count - 1):
         page = pdfstream.pages[i].extract_text()
         result = re.findall(regex, page)
         if len(result) > 0:
-            print(result)
             file_list += result
     file_list = list(dict.fromkeys(file_list))
+    print (len(file_list))
     return file_list
 
+def get_ip(pdfstream, start_page):
+    ip_list = []
+    regex_ipv4 = re.compile(r"((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))")
+    regex_ipv6 = re.compile(r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))", re.IGNORECASE)
+    page_count = len(pdfstream.pages)
+    for i in range(start_page, page_count - 1):
+        page = pdfstream.pages[i].extract_text()
+        result_ipv4 = re.findall(regex_ipv4, page)
+        result_ipv6 = re.findall(regex_ipv6, page)
+        if len(result_ipv4) > 0:
+            ip_list += result_ipv4
+        elif len(result_ipv6) > 0:
+            ip_list += result_ipv6
+
+    ip_list = list(dict.fromkeys(ip_list))
+    print(len(ip_list))
+    return ip_list
 
 
 
-
-
-file_obj = PyPDF2.PdfReader('Dataset/109290088.pdf')
+file_obj = PyPDF2.PdfReader('../../Dataset/125572415.pdf')
 suspect_page = page_finder(file_obj, "Section A:")
 suspect_page_text = file_obj.pages[suspect_page].extract_text()
 
@@ -102,5 +118,6 @@ print(get_id_esp(suspect_page_text))
 print((get_emails(file_obj, suspect_page)))
 print(get_md5(file_obj,suspect_page))
 print(get_file_names(file_obj,suspect_page))
+print(get_ip(file_obj,suspect_page))
 
 
