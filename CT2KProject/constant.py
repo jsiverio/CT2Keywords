@@ -1,2 +1,3 @@
 #Declare constants
-SP_PAGE_KEYWORD = "Section A:"
+PAGE_1_KEYWORD = "Section A:"
+CONTENTS_KEYWORD = "Contents"
