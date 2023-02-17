@@ -1,29 +1,16 @@
 import PyPDF2
 import re
-import os
-import argparse
+import menu
 
-import argparse as argparse
 
-parser = argparse.ArgumentParser(description="Extract identifiers from cybertips and generats keyword list")
-parser.add_argument("-s", "--source", metavar="root", type=str, help="Directory where cybertips are located")
-parser.add_argument("-o", "--output", metavar="outputDirectory", type=str, help="Keyword file destination")
-parser.add_argument("-a", "--all", action="store_true", help="Extracts all identifiers")
-parser.add_argument("-c", "--combined", action="store_true", help= "Puts all identifiers in one file")
-parser.add_argument("-e", "--separate", action="store_true", help="Separates identifiers per category")
-parser.add_argument("-u", "--usernames", action="store_true", help="Extracts usernames and/or ESP user ID only")
-parser.add_argument("-f", "--files", action="store_true", help="Extracts file names only")
-parser.add_argument("-ha", "--hashes", action="store_true", help="Extracts hash values only")
-parser.add_argument("-i", "--ip", action="store_true", help="Extracts all IPs")
-args = parser.parse_args()
-#print(args.echo)
 
-def cybertips(root):
-    for root, dirs, files in os.walk(".", topdown=False):
-        for name in files:
-            print(os.path.join(root, name))
-        for name in dirs:
-            print(os.path.join(root, name))
+
+
+
+
+
+
+
 
 
 # Return page where keyword hit is found.
